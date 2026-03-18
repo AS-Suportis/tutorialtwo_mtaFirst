@@ -1,0 +1,41 @@
+{
+  "name": "tutorialtwo",
+  "version": "1.0.0",
+  "dependencies": {
+    "@cap-js/hana": "^2",
+    "@sap/cds": "^9",
+    "@sap/xssec": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^2",
+    "@sap/cds-dk": "^9",
+    "rimraf": "^5.0.5",
+    "mbt": "^1.2.29"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch-tutelem": "cds watch --open tutelem/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "undeploy": "cf undeploy tutorialtwo --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "watch-tutui5": "cds watch --open tutui5/index.html?sap-ui-xx-viewCache=false --livereload false"
+  },
+  "private": true,
+  "cds": {
+    "requires": {
+      "[production]": {
+        "db": "hana",
+        "auth": "xsuaa"
+      },
+      "html5-repo": true,
+      "destinations": true,
+      "workzone": true
+    }
+  },
+  "sapux": [
+    "app/tutelem"
+  ],
+  "engines": {
+    "node": ">=20"
+  }
+}
