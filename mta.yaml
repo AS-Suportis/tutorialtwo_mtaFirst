@@ -3,194 +3,202 @@ ID: tutorialtwo
 description: A simple CAP project.
 version: 1.0.0
 modules:
-  - name: tutorialtwo-srv
-    type: nodejs
-    path: gen/srv
-    requires:
-      - name: tutorialtwo-auth
-      - name: tutorialtwo-db
-      - name: tutorialtwo-destination
-    provides:
-      - name: srv-api
-        properties:
-          srv-url: ${default-url}
-    parameters:
-      buildpack: nodejs_buildpack
-      instances: 1
-    build-parameters:
-      builder: npm-ci
-  - name: tutorialtwo-db-deployer
-    type: hdb
-    path: gen/db
-    requires:
-      - name: tutorialtwo-db
-    parameters:
-      buildpack: nodejs_buildpack
-  - name: tutorialtwo-app-deployer
-    type: com.sap.application.content
-    path: gen
-    requires:
-      - name: tutorialtwo-auth
-      - name: srv-api
-      - name: tutorialtwo-html5-repo-host
-        parameters:
-          config:
-            HTML5Runtime_enabled: true
-          content-target: true
-    build-parameters:
-      build-result: app/
-      requires:
-        - artifacts:
-            - tutelem.zip
-          name: tutelem
-          target-path: app/
-        - artifacts:
-            - tutui5.zip
-          name: tutui5
-          target-path: app/
-  - name: tutorialtwo-destinations
-    type: com.sap.application.content
-    requires:
-      - name: tutorialtwo-auth
-        parameters:
-          service-key:
-            name: tutorialtwo-auth-key
-      - name: tutorialtwo-html5-repo-host
-        parameters:
-          service-key:
-            name: tutorialtwo-html5-repo-host-key
-      - name: srv-api
-      - name: tutorialtwo-destination
-        parameters:
-          content-target: true
-    parameters:
-      content:
-        instance:
-          destinations:
-            - Name: tutorialtwo-html5-repository
-              ServiceInstanceName: tutorialtwo-html5-repo-host
-              ServiceKeyName: tutorialtwo-html5-repo-host-key
-              sap.cloud.service: tutorialtwo.service
-            - Authentication: OAuth2UserTokenExchange
-              Name: tutorialtwo-auth
-              ServiceInstanceName: tutorialtwo-auth
-              ServiceKeyName: tutorialtwo-auth-key
-              sap.cloud.service: tutorialtwo.service
-          existing_destinations_policy: update
-    build-parameters:
-      no-source: true
-  - name: tutorialtwo
-    type: approuter.nodejs
-    path: app/router
-    requires:
-      - name: srv-api
-        group: destinations
-        properties:
-          forwardAuthToken: true
-          name: srv-api
-          url: ~{srv-url}
-      - name: tutorialtwo-auth
-      - name: tutorialtwo-destination
-      - name: tutorialtwo-html5-runtime
-    provides:
-      - name: app-api
-        properties:
-          app-protocol: ${protocol}
-          app-uri: ${default-uri}
-    parameters:
-      disk-quota: 256M
-      keep-existing-routes: true
-      memory: 256M
-  - name: tutelem
-    type: html5
-    path: app/tutelem
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:cf
-        - npm ci
-        - npm run build
-      supported-platforms:
-        []
-  - name: tutui5
-    type: html5
-    path: app/tutui5
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:cf
-        - npm ci
-        - npm run build
-      supported-platforms:
-        []
-resources:
+- name: tutorialtwo-srv
+  type: nodejs
+  path: gen/srv
+  requires:
   - name: tutorialtwo-auth
-    type: org.cloudfoundry.managed-service
-    parameters:
-      config:
-        oauth2-configuration:
-          credential-types:
-            - binding-secret
-            - x509
-          redirect-uris:
-            - https://*~{app-api/app-uri}/**
-        tenant-mode: dedicated
-        xsappname: tutorialtwo-${org}-${space}
-      path: ./xs-security.json
-      service: xsuaa
-      service-plan: application
-    requires:
-      - name: app-api
   - name: tutorialtwo-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
-  - name: tutorialtwo-html5-repo-host
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-plan: app-host
   - name: tutorialtwo-destination
-    type: org.cloudfoundry.managed-service
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    instances: 1
+  build-parameters:
+    builder: npm-ci
+- name: tutorialtwo-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: tutorialtwo-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: tutorialtwo-app-deployer
+  type: com.sap.application.content
+  path: gen
+  requires:
+  - name: tutorialtwo-auth
+  - name: srv-api
+  - name: tutorialtwo-html5-repo-host
     parameters:
       config:
         HTML5Runtime_enabled: true
-        init_data:
-          instance:
-            destinations:
-              - Authentication: NoAuthentication
-                HTML5.DynamicDestination: true
-                HTML5.ForwardAuthToken: true
-                Name: srv-api
-                ProxyType: Internet
-                Type: HTTP
-                URL: ~{srv-api/srv-url}
-              - Authentication: NoAuthentication
-                Name: ui5
-                ProxyType: Internet
-                Type: HTTP
-                URL: https://ui5.sap.com
-            existing_destinations_policy: update
-      service: destination
-      service-plan: lite
+      content-target: true
+  build-parameters:
+    build-result: app/
     requires:
-      - name: srv-api
-  - name: tutorialtwo-html5-runtime
-    type: org.cloudfoundry.managed-service
+    - artifacts:
+      - tutelem.zip
+      name: tutelem
+      target-path: app/
+    - artifacts:
+      - tutui5.zip
+      name: tutui5
+      target-path: app/
+    - artifacts:
+      - tutadmin.zip
+      name: tutadmin
+      target-path: app/
+- name: tutorialtwo-destinations
+  type: com.sap.application.content
+  requires:
+  - name: tutorialtwo-auth
     parameters:
-      service: html5-apps-repo
-      service-plan: app-runtime
+      service-key:
+        name: tutorialtwo-auth-key
+  - name: tutorialtwo-html5-repo-host
+    parameters:
+      service-key:
+        name: tutorialtwo-html5-repo-host-key
+  - name: srv-api
+  - name: tutorialtwo-destination
+    parameters:
+      content-target: true
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: tutorialtwo-html5-repository
+          ServiceInstanceName: tutorialtwo-html5-repo-host
+          ServiceKeyName: tutorialtwo-html5-repo-host-key
+          sap.cloud.service: tutorialtwo.service
+        - Authentication: OAuth2UserTokenExchange
+          Name: tutorialtwo-auth
+          ServiceInstanceName: tutorialtwo-auth
+          ServiceKeyName: tutorialtwo-auth-key
+          sap.cloud.service: tutorialtwo.service
+        existing_destinations_policy: update
+  build-parameters:
+    no-source: true
+- name: tutorialtwo
+  type: approuter.nodejs
+  path: app/router
+  requires:
+  - name: srv-api
+    group: destinations
+    properties:
+      forwardAuthToken: true
+      name: srv-api
+      url: ~{srv-url}
+  - name: tutorialtwo-auth
+  - name: tutorialtwo-destination
+  - name: tutorialtwo-html5-runtime
+  provides:
+  - name: app-api
+    properties:
+      app-protocol: ${protocol}
+      app-uri: ${default-uri}
+  parameters:
+    disk-quota: 256M
+    keep-existing-routes: true
+    memory: 256M
+- name: tutelem
+  type: html5
+  path: app/tutelem
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: tutui5
+  type: html5
+  path: app/tutui5
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: tutadmin
+  type: html5
+  path: app/tutadmin
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: tutorialtwo-auth
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      oauth2-configuration:
+        credential-types:
+        - binding-secret
+        - x509
+        redirect-uris:
+        - https://*~{app-api/app-uri}/**
+      tenant-mode: dedicated
+      xsappname: tutorialtwo-${org}-${space}
+    path: ./xs-security.json
+    service: xsuaa
+    service-plan: application
+  requires:
+  - name: app-api
+- name: tutorialtwo-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: tutorialtwo-html5-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-host
+- name: tutorialtwo-destination
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            HTML5.DynamicDestination: true
+            HTML5.ForwardAuthToken: true
+            Name: srv-api
+            ProxyType: Internet
+            Type: HTTP
+            URL: ~{srv-api/srv-url}
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+    service: destination
+    service-plan: lite
+  requires:
+  - name: srv-api
+- name: tutorialtwo-html5-runtime
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-runtime
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-    - builder: custom
-      commands:
-        - npm ci
-        - npx cds build --production
+  - builder: custom
+    commands:
+    - npm ci
+    - npx cds build --production
