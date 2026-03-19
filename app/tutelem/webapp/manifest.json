@@ -21,14 +21,14 @@
         "type": "OData",
         "settings": {
           "annotations": [],
-          "odataVersion": "4.01"
+          "odataVersion": "4.0"
         }
       }
     },
     "crossNavigation": {
       "inbounds": {
-        "tutui5-display": {
-          "semanticObject": "tutui5",
+        "tutelem-display": {
+          "semanticObject": "tutelem",
           "action": "display",
           "signature": {
             "parameters": {},
