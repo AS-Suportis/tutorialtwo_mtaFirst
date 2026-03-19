@@ -18,11 +18,95 @@
     },
     "CatalogService": {
       "@source": "srv/cat-service.cds",
-      "kind": "service"
+      "kind": "service",
+      "@requires": "user"
     },
     "CatalogService.Books": {
       "kind": "entity",
       "@readonly": true,
+      "@UI.FieldGroup#GeneratedGroup.$Type": "UI.FieldGroupType",
+      "@UI.FieldGroup#GeneratedGroup.Data": [
+        {
+          "$Type": "UI.DataField",
+          "Label": "ID",
+          "Value": {
+            "=": "ID"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Label": "title",
+          "Value": {
+            "=": "title"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Label": "stock",
+          "Value": {
+            "=": "stock"
+          }
+        }
+      ],
+      "@UI.Facets": [
+        {
+          "$Type": "UI.ReferenceFacet",
+          "ID": "GeneratedFacet1",
+          "Label": "General Information",
+          "Target": "@UI.FieldGroup#GeneratedGroup"
+        }
+      ],
+      "@UI.LineItem": [
+        {
+          "$Type": "UI.DataField",
+          "Label": "ID",
+          "Value": {
+            "=": "ID"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Label": "title",
+          "Value": {
+            "=": "title"
+          }
+        },
+        {
+          "$Type": "UI.DataField",
+          "Label": "stock",
+          "Value": {
+            "=": "stock"
+          }
+        }
+      ],
+      "projection": {
+        "from": {
+          "ref": [
+            "my.bookshop.Books"
+          ]
+        }
+      },
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.Integer"
+        },
+        "title": {
+          "type": "cds.String"
+        },
+        "stock": {
+          "type": "cds.Integer"
+        }
+      }
+    },
+    "AdminService": {
+      "@source": "srv/cat-service.cds",
+      "kind": "service",
+      "@requires": "admin"
+    },
+    "AdminService.Books": {
+      "kind": "entity",
+      "@odata.draft.enabled": true,
       "@UI.FieldGroup#GeneratedGroup.$Type": "UI.FieldGroupType",
       "@UI.FieldGroup#GeneratedGroup.Data": [
         {
