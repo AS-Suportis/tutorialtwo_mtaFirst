@@ -1,0 +1,20 @@
+{
+  "requires": {
+    "[hybrid]": {
+      "db": {
+        "binding": {
+          "type": "cf",
+          "apiEndpoint": "https://api.cf.eu10-004.hana.ondemand.com",
+          "org": "SUPORTIS_AG_tutorial-dev-ibebx381",
+          "space": "dev",
+          "instance": "tutorialtwo-db",
+          "key": "tutorialtwo-db-key"
+        },
+        "kind": "hana-cloud",
+        "vcap": {
+          "name": "db"
+        }
+      }
+    }
+  }
+}
