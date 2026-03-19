@@ -1,7 +1,7 @@
 {
   "_version": "1.83.0",
   "sap.app": {
-    "id": "tutelem",
+    "id": "tutadmin",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -13,11 +13,11 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:lrop",
       "version": "1.21.0",
-      "toolsId": "932a0d04-2f8c-4ec4-8581-cb6ec3e65a0f"
+      "toolsId": "4b5d0b88-c6fd-4d5d-8976-a08fa1a03d20"
     },
     "dataSources": {
       "mainService": {
-        "uri": "/odata/v4/catalog/",
+        "uri": "/odata/v4/admin/",
         "type": "OData",
         "settings": {
           "annotations": [],
@@ -27,8 +27,8 @@
     },
     "crossNavigation": {
       "inbounds": {
-        "tutelem-display": {
-          "semanticObject": "tutelem",
+        "tutadmin-display": {
+          "semanticObject": "tutadmin",
           "action": "display",
           "signature": {
             "parameters": {},
@@ -73,7 +73,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "tutelem.i18n.i18n"
+          "bundleName": "tutadmin.i18n.i18n"
         }
       },
       "": {
