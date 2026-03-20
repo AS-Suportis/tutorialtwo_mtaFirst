@@ -1,0 +1,36 @@
+name: BTP Deployment
+
+on:
+  push:
+    branches: [ "ghactions" ]
+  pull_request:
+    branches: [ "ghactions" ]
+
+jobs:
+  build:
+
+    runs-on: Tutorial
+
+    strategy:
+      matrix:
+        node-version: [23.x]
+        
+    steps:
+uses: actions/checkout@v4
+name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+run: npm ci
+name: Build 
+      run: mbt build
+name: Deploy to Cloud Foundry
+      run: |
+        cf login -a ${{ secrets.CF_APIURL }} \
+           -u ${{ secrets.CF_USERNAME }} \
+           -p ${{ secrets.CF_PASSWORD }} \
+           -o SUPORTIS_AG_demo-dev-ywck393y \
+           -s dev
+        cf deploy mta_archives/*.mtar
+#name: Push Message
+#      run: curl -d "Deployment finished" (ntfy-url)
