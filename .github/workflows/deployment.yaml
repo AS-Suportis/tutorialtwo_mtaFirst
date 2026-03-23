@@ -29,12 +29,8 @@ jobs:
         # remove here the 'cache: "npm" line (from a GitHub Template) if you don't want to use caching (takes a lot of time and space)
     - run: npm ci
     - name: Build 
-      run: mbt build
+      run: mbt build -t archive.mtar
     - name: Deploy to Cloud Foundry
-      run:    echo "=== Suche nach .mtar Dateien ==="
-              find . -name "*.mtar"
-              echo "=== Inhalt aktuelles Verzeichnis ==="
-              ls -la
-              cf login -a ${{ secrets.CF_APIURL }} -u ${{ secrets.CF_USERNAME }} -p ${{ secrets.CF_PASSWORD }} -o SUPORTIS_AG_demo-dev-ywck393y -s dev; cf deploy mta_archives/*.mtar
+      run: cf login -a ${{ secrets.CF_APIURL }} -u ${{ secrets.CF_USERNAME }} -p ${{ secrets.CF_PASSWORD }} -o SUPORTIS_AG_demo-dev-ywck393y -s dev; cf deploy ./mtar_archive/archive.mtar
     - name: Push Message
       run: curl -d "Deployment finished" (ntfy-url)
