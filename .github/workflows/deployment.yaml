@@ -30,14 +30,17 @@ jobs:
     - run: npm ci
     - name: Build 
       run: mbt build
-- name: Deploy to Cloud Foundry
-  env:
-    CF_APIURL: ${{ secrets.CF_APIURL }}
-    CF_USERNAME: ${{ secrets.CF_USERNAME }}
-    CF_PASSWORD: ${{ secrets.CF_PASSWORD }}
-  shell: bash
-  run: |
-    cf login -a "$CF_APIURL" -u "$CF_USERNAME" -p "$CF_PASSWORD" -o SUPORTIS_AG_demo-dev-ywck393y -s dev
-    cf deploy mta_archives/*.mtar
+    - name: Deploy to Cloud Foundry
+      env:
+        CF_APIURL: ${{ secrets.CF_APIURL }}
+        CF_USERNAME: ${{ secrets.CF_USERNAME }}
+        CF_PASSWORD: ${{ secrets.CF_PASSWORD }}
+      run: |
+        cf login -a "$CF_APIURL" \
+              -u "$CF_USERNAME" \
+              -p "$CF_PASSWORD" \
+              -o SUPORTIS_AG_demo-dev-ywck393y \
+              -s dev
+        cf deploy mta_archives/*.mtar
     - name: Push Message
       run: curl -d "Deployment finished" (ntfy-url)
