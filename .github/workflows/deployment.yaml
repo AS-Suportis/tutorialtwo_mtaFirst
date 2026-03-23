@@ -29,7 +29,7 @@ jobs:
         # remove here the 'cache: "npm" line (from a GitHub Template) if you don't want to use caching (takes a lot of time and space)
     - run: npm ci
     - name: Build 
-      run: mbt build -f archive.mtar
+      run: mbt build --mtar archive.mtar
     - name: Deploy to Cloud Foundry
       run: cf login -a ${{ secrets.CF_APIURL }} -u ${{ secrets.CF_USERNAME }} -p ${{ secrets.CF_PASSWORD }} -o SUPORTIS_AG_demo-dev-ywck393y -s dev; cf deploy ./mtar_archive/archive.mtar
     - name: Push Message
