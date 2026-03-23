@@ -44,3 +44,4 @@ jobs:
         cf deploy mta_archives/*.mtar
     - name: Push Message
       run: curl -d "Deployment finished" (ntfy-url)
+      
