@@ -34,5 +34,6 @@ jobs:
       run: dir mta_archives
     - name: Deploy to Cloud Foundry
       run: cf login -a ${{ secrets.CF_APIURL }} -u ${{ secrets.CF_USERNAME }} -p ${{ secrets.CF_PASSWORD }} -o SUPORTIS_AG_demo-dev-ywck393y -s dev; cf deploy mta_archives/archive.mtar
-    - name: Push Message
-      run: curl -d "Deployment finished" (ntfy-url)
+#    - name: Push Message
+#      run: curl -d "Deployment finished" (ntfy-url)
+
