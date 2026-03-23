@@ -37,5 +37,5 @@ jobs:
            -o SUPORTIS_AG_demo-dev-psdpn57u \
            -s dev
         cf deploy mta_archives/*.mtar
-  #  - name: Push Message
-  #    run: curl -d "Deployment finished" (ntfy-url)
+    - name: Push Message
+      run: curl -d "Deployment finished" (ntfy-url)
