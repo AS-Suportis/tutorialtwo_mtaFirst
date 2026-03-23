@@ -31,7 +31,7 @@ jobs:
     - name: Build 
       run: mbt build --mtar archive.mtar
     - name: dir 
-      run: dir
+      run: dir mtar_archives
     - name: Deploy to Cloud Foundry
       run: cf login -a ${{ secrets.CF_APIURL }} -u ${{ secrets.CF_USERNAME }} -p ${{ secrets.CF_PASSWORD }} -o SUPORTIS_AG_demo-dev-ywck393y -s dev; cf deploy ./tutorialtwo_mtaFirst/mtar_archives/archive.mtar
     - name: Push Message
