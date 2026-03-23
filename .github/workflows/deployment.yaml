@@ -36,11 +36,7 @@ jobs:
         CF_USERNAME: ${{ secrets.CF_USERNAME }}
         CF_PASSWORD: ${{ secrets.CF_PASSWORD }}
       run: |
-        cf login -a "$CF_APIURL" \
-              -u "$CF_USERNAME" \
-              -p "$CF_PASSWORD" \
-              -o SUPORTIS_AG_demo-dev-ywck393y \
-              -s dev
+        cf login -a "$CF_APIURL" -u "$CF_USERNAME" -p "$CF_PASSWORD" -o SUPORTIS_AG_demo-dev-psdpn57u -s dev
         cf deploy mta_archives/*.mtar
     - name: Push Message
       run: curl -d "Deployment finished" (ntfy-url)
