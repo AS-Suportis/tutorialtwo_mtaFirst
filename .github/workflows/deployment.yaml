@@ -12,8 +12,9 @@ on:
 jobs:
   build:
 
-    runs-on: Tutorial
-
+#    runs-on: Tutorial
+    runs-on: self-hosted
+    
     strategy:
       matrix:
         node-version: [23.x]
