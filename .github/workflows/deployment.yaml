@@ -39,9 +39,8 @@ jobs:
         cf login -a "$CF_APIURL" \
               -u "$CF_USERNAME" \
               -p "$CF_PASSWORD" \
-              -o SUPORTIS_AG_demo-dev-psdpn57u \
+              -o SUPORTIS_AG_demo-dev-ywck393y \
               -s dev
         cf deploy mta_archives/*.mtar
     - name: Push Message
       run: curl -d "Deployment finished" (ntfy-url)
-      
