@@ -31,6 +31,10 @@ jobs:
     - name: Build 
       run: mbt build
     - name: Deploy to Cloud Foundry
-      run: cf login -a ${{ secrets.CF_APIURL }} -u ${{ secrets.CF_USERNAME }} -p ${{ secrets.CF_PASSWORD }} -o SUPORTIS_AG_demo-dev-ywck393y -s dev; cf deploy mta_archives/*.mtar
+      run:    echo "=== Suche nach .mtar Dateien ==="
+              find . -name "*.mtar"
+              echo "=== Inhalt aktuelles Verzeichnis ==="
+              ls -la
+              cf login -a ${{ secrets.CF_APIURL }} -u ${{ secrets.CF_USERNAME }} -p ${{ secrets.CF_PASSWORD }} -o SUPORTIS_AG_demo-dev-ywck393y -s dev; cf deploy mta_archives/*.mtar
     - name: Push Message
       run: curl -d "Deployment finished" (ntfy-url)
